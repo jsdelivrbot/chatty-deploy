@@ -1,0 +1,87 @@
+<template id="login-template">
+    <div class="card shadow-sm">
+        <div class="card-header py-3">
+            <div class="h4 m-0 text-secondary">MASUK</div>
+            <small>Selamat datang kembali.</small>
+        </div>
+        <div class="card-body">
+            <form class="form" method="post" action="/api/login" autocomplete="off" id="login">
+                <div class="form-group mt-3 mb-4">
+                    <div class="input-group is-empty">
+                        <label for="username">Username</label>
+                        <input type="text" name="username" id="username" class="form-control">
+                        <div class="icon-feedback"></div>
+                    </div>
+                    <p class="feedback"></p>
+                </div>
+                <div class="form-group mt-4 mb-3">
+                    <div class="input-group is-empty">
+                        <label for="password">Password</label>
+                        <input type="password" name="password" id="password" class="form-control">
+                        <div class="toggle-password"><i class="fa fa-eye"></i></div>
+                    </div>
+                    <p class="feedback"></p>
+                </div>
+                <hr class="my-4">
+                <div class="form-group">
+                    <button class="btn btn-primary btn-block btn-loading" id="btn-login">
+                        <span class="txt">MASUK</span>
+                        <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer text-center">
+            <a href="./register" class="btn btn-light btn-block text-primary">DAFTAR</a>
+        </div>
+    </div>
+</template>
+
+<script>
+    function login() {
+        $('title').html("{{ appName }} | Login")
+        $("#app").html($("#login-template").html());
+
+        FormControl.init();
+
+        $("#btn-login:enabled").click(function(e){
+            e.preventDefault();
+            $("#login").submit();
+        })
+
+        var dataFields = ["username", "password"];
+
+        $("#login").ajaxForm({
+            beforeSubmit: function(){
+                $("#btn-login").addClass("loading").attr("disabled", "disabled");
+            },
+            success: function (response) {
+                console.log(response);
+                if(response.passed){
+                    location.reload()
+                }else if(response.errors){
+                    $.each(dataFields, function(key, value){
+                        FormControl.reset("#"+value);
+                    });
+                    $.each(response.errors, function(key, value){
+                        FormControl.setError("#"+key, value);
+                    });
+                    $("#btn-login").removeClass("loading").removeAttr("disabled"); 
+                }else if(!response.passed && !response.errors){
+                    $.each(dataFields, function(key, value){
+                        FormControl.reset("#"+value);
+                    });
+                    iziToast.show({
+                        icon: 'la la-times',
+                        title: $("#name").val(),
+                        message: 'Gagal masuk!',
+                        position: "bottomRight",
+                        color: "#FF4C52",
+                        theme:"dark"
+                    });
+                    $("#btn-login").removeClass("loading").removeAttr("disabled"); 
+                }
+            }
+        });
+    }
+</script>

@@ -1,0 +1,36 @@
+<script src="/public/js/scripts.min.js"></script>
+<script src="/public/js/form-control.js"></script>
+
+{{# if isLogin}}
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.5.2/firebase.js"></script>
+<script>
+
+    $(window).on("load", function () {
+        $('#praloader').fadeOut();
+    });
+
+    var socket = io();
+    socket.on('_session_id', function (id) {
+        socket.emit("_session_on", {
+            id: Cookies.get("uid"),
+            token: Cookies.get("session_token"),
+            _session_id: id
+        })
+    })
+
+    var config = {
+        apiKey: "AIzaSyDRaCePMVeVCEJjGcwU8EJCpWSp6njnGjU",
+        authDomain: "db-chatty.firebaseapp.com",
+        databaseURL: "https://db-chatty.firebaseio.com",
+        projectId: "db-chatty",
+        storageBucket: "db-chatty.appspot.com",
+        messagingSenderId: "998335317596"
+    }
+    firebase.initializeApp(config);
+</script>
+{{/ if }}
+
+<script>
+    
+</script>

@@ -1,0 +1,11 @@
+<script>
+    function redirect(path){
+        page.redirect(path);
+    }
+    page("/", function () {
+        redirect("/register");
+    });
+    page("/register", register);
+    page("/login", login);
+    page();
+</script>

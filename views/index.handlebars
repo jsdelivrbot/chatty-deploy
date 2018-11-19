@@ -1,0 +1,98 @@
+<div class="container-fluid">
+    <div class="row ">
+        <div class="col-md-3">
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-10">
+                            <div class="name">dede ardiansya</div>
+                            <small>last messange</small>
+                        </div>
+                        <div class="col-2">
+                            <span class="badge badge-primary">3</span>
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-10">
+                            <div class="name">dede ardiansya</div>
+                            <small>last messange</small>
+                        </div>
+                        <div class="col-2">
+                            <span class="badge badge-primary">3</span>
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-10">
+                            <div class="name">dede ardiansya</div>
+                            <small>last messange</small>
+                        </div>
+                        <div class="col-2">
+                            <span class="badge badge-primary">3</span>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="col-md-6 bg-white">
+            <div class="container">
+                <ul class="list-group p-0" id="mess-container">
+
+                </ul>
+            </div>
+            <footer class="mt-4 mb-2">
+                <div class="container">
+                    <form>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="m">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" id="btn">SEND</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </footer>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card card-body">
+                <h1>{{ user.name }}</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    $(function () {
+        var name = "{{ user.name }}";
+        var socket = io();
+        $('#btn').click(function (e) {
+            e.preventDefault();
+
+            var mess = {
+                name: name,
+                mess: $('#m').val()
+            }
+
+            socket.emit('chat message', mess);
+
+            $('#m').val('');
+            return false;
+        });
+        socket.on('chat message', function (msg) {
+
+            var x = "<li class='list-group-item'>" +
+                "<p class='m-0'>" + msg.name + "</p>" +
+                "<small class='m-0'>" + msg.mess + "</small>" +
+                "</li>";
+
+            $('#mess-container').append(x);
+        });
+    });
+</script>

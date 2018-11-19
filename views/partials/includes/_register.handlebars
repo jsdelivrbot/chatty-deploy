@@ -1,0 +1,104 @@
+<template id="register-template">
+    <div class="card shadow-sm">
+        <div class="card-header py-3">
+            <div class="h4 m-0 text-secondary">DAFTAR</div>
+            <small>Buat akun Anda sekarang.</small>
+        </div>
+        <div class="card-body pb-0">
+            <form class="form" method="post" action="api/register" autocomplete="off" id="register">
+                <div class="form-group mt-3 mb-4">
+                    <div class="input-group is-empty">
+                        <label for="name">Nama anda</label>
+                        <input type="text" name="name" id="name" class="form-control">
+                    </div>
+                    <p class="feedback"></p>
+                </div>
+                <div class="form-group my-4">
+                    <div class="input-group is-empty">
+                        <label for="username">Username</label>
+                        <input type="username" name="username" id="username" class="form-control">
+                        <div class="icon-feedback"></div>
+                    </div>
+                    <p class="feedback"></p>
+                </div>
+                <div class="form-group my-4">
+                    <div class="input-group is-empty">
+                        <label for="password">Password</label>
+                        <input type="password" name="password" id="password" class="form-control">
+                        <div class="toggle-password"><i class="fa fa-eye"></i></div>
+                    </div>
+                    <p class="feedback"></p>
+                </div>
+                <hr class="my-4">
+                <div class="form-group">
+                    <button class="btn btn-primary btn-block btn-loading" id="btn-register">
+                        <span class="txt">DAFTAR</span>
+                        <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer text-center">
+            <a href="./login" class="btn btn-light btn-block text-primary">MASUK</a>
+        </div>
+    </div>
+</template>
+
+<script>
+    function register() {
+        $('title').html("{{ appName }} | Register")
+        $("#app").html($("#register-template").html());
+        FormControl.init();
+
+        $("#btn-register:enabled").click(function (e) {
+            e.preventDefault();
+            $("#register").submit();
+        })
+
+        var dataFields = ["name", "username", "password"];
+
+        $("#register").ajaxForm({
+            beforeSubmit: function(){
+                $("#btn-register").addClass("loading").attr("disabled", "disabled");
+            },
+            success: function (response) {
+                console.log(response);
+                if (response.passed) {
+                    redirect("/login");
+                    iziToast.show({
+                        icon: 'la la-check',
+                        title: $("#name").val(),
+                        message: 'Pendaftaran berhasil.',
+                        position: "bottomRight",
+                        color: "#667AFA",
+                        theme:"dark"
+                    });
+                    $("input").val("");
+                } else if (response.errors) {
+
+                    $.each(dataFields, function (key, value) {
+                        FormControl.reset("#" + value);
+                    });
+                    $.each(response.errors, function (key, value) {
+                        FormControl.setError("#" + key, value);
+                    });
+
+                } else if (!response.passed && !response.errors) {
+                    $.each(dataFields, function (key, value) {
+                        FormControl.reset("#" + value);
+                    });
+                    iziToast.show({
+                        icon: 'la la-times',
+                        title: $("#name").val(),
+                        message: 'Pendaftaran gagal!',
+                        position: "bottomRight",
+                        color: "#FF4C52",
+                        theme:"dark"
+                    });
+                }
+                $("#btn-register").removeClass("loading").removeAttr("disabled"); 
+            }
+        });
+
+    }
+</script>

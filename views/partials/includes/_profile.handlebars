@@ -1,0 +1,113 @@
+<div class="main" id="profile-app">
+    <div class="avatar" id="profile-avatar">
+        <img v-bind:src="'public/uploads/' + (( avatar ))" alt="">
+    </div>
+
+    <div class="data mt-4 text-center">
+        <input type="text" id="profile-name" class="h5 form-control-plaintext d-inline-block text-center text-uppercase"
+            v-bind:value="(( name ))">
+        <p class="text-secondary">(( username ))</p>
+        <small>(( online ))</small>
+    </div>
+    <div class="tools mt-5 p-3">
+        <div class="my-2">
+            <a href="#" class="btn btn-danger btn-block">Keluar</a>
+        </div>
+    </div>
+    <form method="post" id="file" enctype="multipart/form-data" action="/api/profile/avatar" class="d-none">
+        <input type="file" name="file" id="fileupload">
+        <button type="submit">Submit</button>
+    </form>
+    <footer class="text-center p-3 bg-white">
+        <a href="#" class="btn btn-link">@_dedeardiansya</a>
+    </footer>
+
+    <div class="overlay overlay-transparent d-none" id="avatar-change-loader">
+        <span class="percen d-block text-center m-auto mt-3" style="font-size: 20px;"></span>
+        <div class="overlay__inner">
+            <div class="overlay__content"><span class="spinner"></span></div>
+        </div>
+    </div>
+
+</div>
+<script>
+    var profileData = {
+        name: "{{ user.name }}",
+        username: "{{ user.username }}",
+        avatar: "{{ user.avatar }}",
+        online: ({{ user.online }}) ?"Online" : "Offline"
+    }
+    var Profile = new Vue({
+        delimiters: ['((', '))'],
+        el: "#profile-app",
+        data: profileData
+    })
+
+
+    firebase.database().ref('users/{{ userId }}')
+        .on('value', function (data) {
+            profileData.name = data.val().name;
+            profileData.avatar = data.val().avatar;
+            profileData.username = data.val().username;
+            profileData.online = (data.val().online) ? "Online" : "Offline";
+        }, function (errorObject) {
+            console.log("The read failed: " + errorObject.code);
+        });
+
+
+    $("#profile-avatar").click(function (e) {
+        e.preventDefault();
+        $('#fileupload').click();
+    });
+    $('#fileupload').change(function () {
+        $('#file').submit().find("input").val('');
+    });
+    $('#file').ajaxForm({
+        uploadProgress: function (event, position, total, percentComplete) {
+            $("#avatar-change-loader").removeClass("d-none");
+            if (percentComplete == 100) {
+                $(".percen").html("Memproses...");
+            } else {
+                $(".percen").html(percentComplete + "%");
+            }
+        },
+        success: function (res) {
+
+            if (!res.passed) {
+                iziToast.show({
+                    icon: 'la la-times',
+                    message: res.errors,
+                    position: "bottomRight",
+                    color: "#FF4C52",
+                    theme: "dark"
+                })
+            }
+
+            $("#avatar-change-loader").addClass("d-none");
+        }
+    });
+
+    $("#profile-name").change(function () {
+        var el = $(this)
+        var oldName = profileData.name
+        var newName = el.val();
+        $.ajax({
+            url: "/api/profile/name",
+            data: { name: newName },
+            method: "post",
+            success: function (res) {
+                
+                if (!res.passed) {
+                    iziToast.show({
+                        icon: 'la la-times',
+                        message: res.errors,
+                        position: "bottomRight",
+                        color: "#FF4C52",
+                        theme: "dark"
+                    })
+                }
+                el.val(oldName)
+            }
+        })
+    });
+</script>

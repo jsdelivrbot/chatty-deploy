@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="theme-color" content="#667AFA" />
+    <title>Document</title>
+    {{> _style }}
+    {{> _script }}
+</head>
+<div class="overlay" id="praloader">
+    <div class="overlay__inner">
+        <div class="overlay__content"><span class="spinner"></span></div>
+    </div>
+</div>
+<body class="bg-light home">
+    <div class="sidebar" id="sidebar-left">
+        <header class="bg-primary py-2">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-2">
+                        <a href="#" class="btn btn-primary btn-toggle toggle-sidebar-left"><i class="la la-arrow-left"></i></a>
+                    </div>
+                    <div class="col-8 my-auto">
+                        <h4 class="m-0 text-center text-light">Profile</h4>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <div class="profile-wrapper">
+            {{> includes/_profile }}
+        </div>
+    </div>
+    <div class="root">
+        <header class="bg-primary py-2">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-2">
+                        <a href="#" class="btn btn-primary btn-toggle toggle-sidebar-left"><i class="la la-user"></i></a>
+                    </div>
+                    <div class="col-8 my-auto">
+                        <h4 class="m-0 text-center text-light">ChatTy</h4>
+                    </div>
+                    <div class="col-2 text-right">
+                        <a href="#" class="btn btn-primary btn-toggle "><i class="la la-sign-out"></i></a>
+                    </div>
+                </div>
+                <div class="form-search">
+                    <input type="text" placeholder="search people..." class="form-control">
+                </div>
+            </div>
+        </header>
+        <div class="warpper">
+            <div class="main">
+                <div class="">
+
+                    {{> includes/_messange-list }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="modal" class="modal-chat" aria-labelledby="modal-custom">
+        <div class="card border-0">
+            <div class="card-header border-0 bg-primary d-flex shadow">
+                <div class="left">
+                    <a href="#" class="btn btn-primary btn-close">
+                        <i class="la la-arrow-left"></i>
+                        <div class="avatar">
+                            <img src="http://mediad.publicbroadcasting.net/p/wpr/files/201803/social-lg.jpg" alt="">
+                        </div>
+                    </a>
+                </div>
+                <div class="center">
+                    <div class="name">Dede ardiansya</div>
+                    <time class="time">Online</time>
+                </div>
+                <div class="right ml-auto my-auto">
+                    <div class="btn-group btn-group-sm">
+                        <a href="#" class="btn btn-primary"><i class="la la-video-camera"></i></a>
+                        <a href="#" class="btn btn-primary"><i class="la la-phone-square"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="scroll">
+                    <ul class="list-group border-0">
+                        <li class="list-group-item border-0 my">
+                            <div class="mess-body">
+                                <p>Lorem, ipsum dolor.</p>
+                                <time>11:00</time>
+                            </div>
+                        </li>
+                        <li class="list-group-item border-0 fr">
+                            <div class="mess-body">
+                                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elitLorem, ipsum dolor sit amet
+                                    consectetur adipisicing elitLorem, ipsum dolor sit amet consectetur adipisicing
+                                    elit.</p>
+                                <time>11:00</time>
+                            </div>
+                        </li>
+                        <li class="list-group-item border-0 my">
+                            <div class="mess-body">
+                                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit.</p>
+                                <time>11:00</time>
+                            </div>
+                        </li>
+                        <li class="list-group-item border-0 fr">
+                            <div class="mess-body">
+                                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit.</p>
+                                <time>11:00</time>
+                            </div>
+                        </li>
+                        <li class="list-group-item border-0 my">
+                            <div class="mess-body">
+                                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit.</p>
+                                <time>11:00</time>
+                            </div>
+                        </li>
+                        <li class="list-group-item border-0 fr">
+                            <div class="mess-body">
+                                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit.</p>
+                                <time>11:00</time>
+                            </div>
+                        </li>
+                        <li class="list-group-item border-0 my">
+                            <div class="mess-body">
+                                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit.</p>
+                                <time>11:00 <i class="la la-check"></i></time>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-footer mess-form border-0 bg-light shadow">
+                <div class="input">
+                    <textarea type="text" class="form-control" placeholder="Type your message..."></textarea>
+                </div>
+                <div class="button">
+                    <button class="btn btn-primary"><i class="la la-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $("#sidebar-left").simplerSidebar({
+                selectors: {
+                    trigger: ".toggle-sidebar-left",
+                    quitter: "close-sidebar",
+                },
+                align: "left",
+                sidebar: {
+                    width: $(window).width()
+                },
+                gap: 0,
+            });
+
+            $(document).on('click', '.open', function (event) {
+                event.preventDefault();
+                $('#modal').iziModal('open');
+            });
+            $(document).on('click', '.btn-close', function (event) {
+                event.preventDefault();
+                $('#modal').iziModal('close');
+            });
+
+            $('#modal').iziModal({
+                headerColor: '#667AFA',
+                width: '50%',
+                overlayColor: 'rgba(0, 0, 0, 0.5)',
+                fullscreen: false,
+                openFullscreen: true,
+                navigateArrows: false,
+                restoreDefaultContent: true,
+            });
+        });
+    </script>
+</body>
+
+</html>

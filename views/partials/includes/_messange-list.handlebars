@@ -1,0 +1,48 @@
+<div class="list-group messange-list border-0" id="messange-list-app">
+    <a class="list-group-item open" href="#" v-for="friends in fr">
+        <div class="left" v-if="friends.data.online">
+            <div class="avatar">
+                <img v-bind:src="'/public/uploads/' + (( friends.data.avatar ))" alt="">
+            </div>
+        </div>
+        <div class="left" v-else>
+            <div class="avatar border-danger">
+                <img v-bind:src="'/public/uploads/' + (( friends.data.avatar ))" alt="">
+            </div>
+        </div>
+        <div class="center">
+            <div class="name">((friends.data.name))</div>
+            <div class="last-mess">this is my first messangethis is my first messangethis is my
+                first messangethis is my first messange</div>
+        </div>
+        <div class="right text-right">
+            <small class="text-primary">Kemarin</small>
+            <span class="badge badge-pill badge-primary">3</span>
+        </div>
+    </a>
+</div>
+
+<script>
+    var MessangeData = {
+        fr: null
+    }
+    var MessangeList = new Vue({
+        delimiters: ['((', '))'],
+        el: "#messange-list-app",
+        data: MessangeData
+    })
+    firebase.database().ref("users").on("value", (users) => {
+        var users = users.val()
+        var fr = [];
+        for (var id in users){
+            if(id != "{{ userId }}"){
+                fr.push({
+                    "id": id,
+                    "data": users[id]
+                })
+            }
+        }
+        console.log(fr)
+        MessangeData.fr = fr;
+    })
+</script>
